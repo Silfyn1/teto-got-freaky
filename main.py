@@ -1,18 +1,20 @@
 import pygame
+#scale function
+def load_and_scale(path: str, dimmensions: tuple):
+    image = pygame.image.load(path).convert_alpha()
+    image = pygame.transform.scale(image, dimmensions)
+    return image
+
 
 # Loading bullshit
 screen = pygame.display.set_mode((400, 800))
 pygame.display.set_caption("Run Teto run")
 teto = pygame.Rect((170,400,45,55))
-teto_image = pygame.image.load("images\\stupid_fucking_teto.png").convert_alpha()
-teto_image = pygame.transform.scale(teto_image, (70, 70))
-job_pipe = pygame.image.load("images\\job_application.png").convert_alpha()
-job_pipe = pygame.transform.scale(job_pipe, (70, 300))
-bg_img = pygame.image.load("images\\city_background.jpg").convert_alpha()
-bg_img = pygame.transform.scale(bg_img, (1600, 800))
+teto_image = load_and_scale("images\\stupid_fucking_teto.png", (70,70))
+job_pipe = load_and_scale("images\\job_application.png",(70,300))
+bg_img = load_and_scale("images\\city_background.jpg", (1600, 800))
+silly_teto_img = load_and_scale("images\\silly teto.jpg", (400, 800))
 teto_image_rect = teto_image.get_rect()
-silly_teto_img = pygame.image.load("images\\silly teto.jpg").convert_alpha()
-silly_teto_img = pygame.transform.scale(silly_teto_img, (400, 800))
 canos = []
 
 #Physics and game states

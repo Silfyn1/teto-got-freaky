@@ -60,10 +60,14 @@ def background_position():
 def pipe_spawning():
     global canos
     global cano
-    if round(bg_pos,-1) % 200 == 0:
-        canos.append(300)
+    global cano_tick
+    if round(bg_pos,-1) % 200 == 0 and cano_tick == 0:
+        canos.append(500)
+        cano_tick = 1
+    if round(bg_pos,-1) % 200 != 0:
+        cano_tick = 0
     for cano in canos:
-        if cano <= 0:
+        if cano <= -100:
             canos.remove(cano)
 
 #time shenenigans
@@ -102,14 +106,17 @@ pygame.display.set_caption("Run Teto run")
 
 # Loading bullshit
 teto_image = load_and_scale("images\\stupid_fucking_teto.png", (70,70))
-job_pipe = load_and_scale("images\\job_application.png",(70,300))
+job_pipe = load_and_scale("images\\beer-removebg-preview.png",(70,300))
+pipe_rect = job_pipe.get_rect()
 bg_img = load_and_scale("images\\city_background.jpg", (1600, 800))
 silly_teto_img = load_and_scale("images\\silly teto.jpg", (400, 800))
 
 #Defining important stuff
 teto = pygame.Rect((170,400,45,55))
-teto_image_rect = teto_image.get_rect() 
+teto_image_rect = teto_image.get_rect()
+job_pipe.set_colorkey((255,255,255))
 bg_img_rect = bg_img.get_rect()
+cano_tick = 0
 canos = []
 
 #Physics and game states

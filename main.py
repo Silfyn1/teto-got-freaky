@@ -23,8 +23,6 @@ def jumping_check(key):
         jumping = False
     if key[pygame.K_ESCAPE]:
         return 0
-    if teto.y >= 750:
-        speed = 0
     else:
         speed += acceleration
         y += speed
@@ -44,9 +42,12 @@ def teto_angle():
         teto_rotation = 30
     elif teto_rotation < -30:
         teto_rotation = -30
-    teto_image_rect.topleft = (teto.left-15, teto.top-9)
-    mortal_teto = teto_image
-    mortal_teto = pygame.transform.rotate(mortal_teto, teto_rotation)
+    mortal_teto = pygame.transform.rotate(teto_image, teto_rotation)
+
+    custom_center = (teto.centerx -5, teto.centery -7)
+    rotated_rect = mortal_teto.get_rect(center=custom_center)
+    teto_image_rect.center = rotated_rect.center
+    mortal_teto.set_colorkey((255,255,255))
     return mortal_teto
 
 # Calculating background postion
@@ -100,6 +101,8 @@ def tetollision():
     for cano in canos2:
         if teto.colliderect(cano):
             return True
+    if teto.y >= 750:
+        return True
     return False
 
 #Drawing everything on screen
@@ -107,7 +110,6 @@ def drawing_screen():
     global canos
     global cano
     screen.blit(bg_img, (background_position(),0))
-    #pygame.draw.rect(screen, (255, 0, 0), teto)
     screen.blit(teto_angle(), teto_image_rect)
     for cano in canos:
         cano.x += game_speed
@@ -146,10 +148,18 @@ def made_in_heaven():
 def dumb_fuck():
     global dumb_position
     global dumber_position
-    dumb_position += 0.2
-    if dumb_position >= 550:
-        dumb_position = -250
-        dumber_position = random.randint(100,700)
+    global dumb_fuck_speedX
+    global dumb_fuck_speedY
+    dumb_position += dumb_fuck_speedX
+    dumber_position += dumb_fuck_speedY
+    if dumb_position >= 300:
+        dumb_fuck_speedX = -(random.randint(2,4))
+    elif dumb_position <= 0:
+        dumb_fuck_speedX = (random.randint(2,4))
+    if dumber_position >= 600:
+        dumb_fuck_speedY = -(random.randint(2,4))
+    if dumber_position <= 0:
+        dumb_fuck_speedY = (random.randint(2,4))
     screen.blit(teto_dumb, (dumb_position,dumber_position))
 
 
@@ -159,17 +169,17 @@ screen = pygame.display.set_mode((400, 800))
 pygame.display.set_caption("Run Teto run")
 
 # Loading bullshit
-teto_image = load_and_scale("images\\stupid_fucking_teto.png", (70,70))
+teto_image = load_and_scale("images\\stupid_fucking_teto.png", (60,70))
 job_pipe = load_and_scale("images\\beer-removebg-preview.png",(80,750))
 job_pipe_r = pygame.transform.flip(job_pipe, True, True)
 bg_img = load_and_scale("images\\city_background.jpg", (1600, 800))
 silly_teto_img = load_and_scale("images\\silly teto.jpg", (400, 800))
 teto_laugh = load_and_scale("images\\teto-kasane.png", (400, 800))
-teto_dumb = load_and_scale("images\\dumb fuck.jpeg", (200, 300))
+teto_dumb = load_and_scale("images\\dumb fuck.jpeg", (100, 200))
 
 
 #Defining important stuff
-teto = pygame.Rect((170,400,45,55))
+teto = pygame.Rect((170,400,30,55))
 teto_image_rect = teto_image.get_rect()
 job_pipe.set_colorkey((255,255,255))
 job_pipe_r.set_colorkey((255,255,255))
@@ -179,7 +189,7 @@ canos = []
 canos2 = []
 
 #Physics and game states
-dumb_position = -250
+dumb_position = 1
 dumber_position = 200
 running = True
 acceleration = 0.7
@@ -191,6 +201,8 @@ jumping = False
 clock = pygame.time.Clock()
 delta_time = 0.1
 game_state = 0
+dumb_fuck_speedX = 2
+dumb_fuck_speedY = 2
 teto_rotation = 0
 
 #Function of game state 0
@@ -216,15 +228,16 @@ def draw_game():
 def draw_loser_screen():
     screen.blit(teto_laugh,(0,0))
     dumb_fuck()
+    print(dumb_position)
     if key[pygame.K_SPACE]:
         made_in_heaven()
         return 1
+    time()
     return 2
 
 
 #Loop
-while running:
-    print(game_state)
+while running:  
     # Check to determine game state
     key = pygame.key.get_pressed()
 
